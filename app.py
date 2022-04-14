@@ -14,7 +14,13 @@ def index():
 @app.route('/live')
 def live():
     game = GameOfLife()
-    return render_template('live.html')
+    if game.counter:
+        game.form_new_generation()
+    game.counter += 1
+    return render_template(
+        'live.html',
+        game=game
+    )
 
 
 if __name__ == '__main__':
