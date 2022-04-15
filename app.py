@@ -1,14 +1,25 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from game_of_live import GameOfLife
+from project.forms import ParameterForm
+from config import Config
 
 
 app = Flask(__name__)
+app.config.from_object(Config)
 
 
-@app.route('/')
+@app.route('/', methods=['get', 'post'])
 def index():
-    GameOfLife(width=25, height=25)
-    return render_template('index.html')
+    GameOfLife()
+    if request.method == 'POST':
+        width = int(request.form.get('width'))
+        height = int(request.form.get('height'))
+        GameOfLife(width=width, height=height)
+
+    return render_template(
+        'index.html',
+        form=ParameterForm()
+    )
 
 
 @app.route('/live')
